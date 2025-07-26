@@ -1,0 +1,30 @@
+# Build stage
+FROM quay.io/quarkus/ubi9-quarkus-mandrel-builder-image:jdk-21 AS build
+WORKDIR /opt/app
+COPY --chown=quarkus:quarkus pom.xml mvnw ./
+COPY --chown=quarkus:quarkus .mvn .mvn
+USER quarkus
+RUN ./mvnw --batch-mode dependency:go-offline
+COPY src src
+RUN ./mvnw package -Dnative -DskipTests
+
+# Extract curl and its libraries
+FROM registry.access.redhat.com/ubi9/ubi-minimal:9.5 AS curl
+RUN microdnf install findutils -y
+RUN mkdir -p /curl-layer/bin /curl-layer/lib64 \
+    && cp /usr/bin/curl /curl-layer/bin/ \
+    && ldd /usr/bin/curl | awk '{print $3}' | xargs -I '{}' cp -v '{}' /curl-layer/lib64/
+
+# Runtime Stage
+FROM quay.io/quarkus/ubi9-quarkus-micro-image:2.0
+WORKDIR /opt/app
+COPY --from=build /opt/app/target/quoteweaver-*-runner /opt/app/quoteweaver-runner
+COPY --from=curl /curl-layer/bin/curl /usr/bin/curl
+COPY --from=curl /curl-layer/lib64/ /lib64/
+RUN chmod 775 /opt/app/ /opt/app/quoteweaver-runner \
+    && chown -R 1001 /opt/app \
+    && chmod -R "g+rwX" /opt/app \
+    && chown -R 1001:root /opt/app
+EXPOSE 3003
+USER 1001
+CMD ["/opt/app/quoteweaver-runner"]
