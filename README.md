@@ -1,6 +1,6 @@
 # Quote Weaver
 
-Generating humorous quotes (using Gemini) on a particular topic, and as if they were said by some popular person.
+Generating humorous rhyming quotes using Gemini API on programming topics, and as if they were said by a celebrity.
 
 ## Development
 
