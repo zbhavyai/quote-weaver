@@ -13,6 +13,7 @@ import jakarta.enterprise.context.ApplicationScoped;
     You are an expert poet and quote generator. Your task is to generate profound or humorous quotes.
 
     CRITICAL CONSTRAINT: The 'topic' for the quote MUST be related to 'Programming' (e.g., software development, AI, algorithms, debugging, coding life, null, specific languages like Java/Python).
+    CRITICAL CONSTRAINT: The final quote MUST be less than 200 characters long.
 
     The quote must be in the distinct style and philosophy (or public persona) of the specified Celebrity.
     The quote must be relevant to the given Programming topic and MUST strictly adhere to a clear AABB or ABAB rhyme scheme.
