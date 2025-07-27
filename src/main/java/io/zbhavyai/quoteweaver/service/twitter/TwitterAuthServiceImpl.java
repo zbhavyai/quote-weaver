@@ -4,11 +4,11 @@ import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
-import java.security.SecureRandom;
 import java.time.Instant;
 import java.util.Base64;
 import java.util.Map;
-import java.util.StringJoiner;
+import java.util.TreeMap;
+import java.util.UUID;
 import java.util.stream.Collectors;
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
@@ -39,50 +39,42 @@ public class TwitterAuthServiceImpl implements TwitterAuthService {
     _accessTokenSecret = accessTokenSecret;
   }
 
-  public String generateAuthHeader(String tweetText) {
-    String method = "POST";
-    String baseUrl = "https://api.x.com/1.1/statuses/update.json";
-    String nonce =
-        new SecureRandom()
-            .ints(32, 'a', 'z' + 1)
-            .mapToObj(i -> String.valueOf((char) i))
-            .collect(Collectors.joining());
+  @Override
+  public String generateOAuth1Header(String method, String url) {
+    LOG.info("generateOAuth1Header: method={}, url={}", method, url);
+
+    String nonce = UUID.randomUUID().toString().replaceAll("-", "");
     String timestamp = String.valueOf(Instant.now().getEpochSecond());
 
-    Map<String, String> oauthParams =
-        Map.of(
-            "oauth_consumer_key", _apiKey,
-            "oauth_nonce", nonce,
-            "oauth_signature_method", "HMAC-SHA1",
-            "oauth_timestamp", timestamp,
-            "oauth_token", _accessToken,
-            "oauth_version", "1.0");
+    Map<String, String> oauthParams = new TreeMap<>();
+    oauthParams.put("oauth_consumer_key", _apiKey);
+    oauthParams.put("oauth_nonce", nonce);
+    oauthParams.put("oauth_signature_method", "HMAC-SHA1");
+    oauthParams.put("oauth_timestamp", timestamp);
+    oauthParams.put("oauth_token", _accessToken);
+    oauthParams.put("oauth_version", "1.0");
 
-    // Form body param
-    String encodedStatus = encode(tweetText);
-
-    // Collect everything for signature base string
-    var allParams = new java.util.TreeMap<String, String>(oauthParams);
-    allParams.put("status", tweetText); // Not encoded yet
-
+    // Step 1: Create Signature Base String
     String paramString =
-        allParams.entrySet().stream()
+        oauthParams.entrySet().stream()
             .map(e -> encode(e.getKey()) + "=" + encode(e.getValue()))
             .collect(Collectors.joining("&"));
 
-    String signatureBase = method + "&" + encode(baseUrl) + "&" + encode(paramString);
+    String signatureBaseString =
+        method.toUpperCase() + "&" + encode(url) + "&" + encode(paramString);
+
+    // Step 2: Create Signing Key
     String signingKey = encode(_apiSecret) + "&" + encode(_accessTokenSecret);
 
-    String signature = hmacSha1(signatureBase, signingKey);
+    // Step 3: Calculate HMAC-SHA1
+    String signature = hmacSha1(signatureBaseString, signingKey);
+    oauthParams.put("oauth_signature", signature);
 
-    // Build OAuth header
-    StringJoiner header = new StringJoiner(", ", "OAuth ", "");
-    for (var entry : oauthParams.entrySet()) {
-      header.add(encode(entry.getKey()) + "=\"" + encode(entry.getValue()) + "\"");
-    }
-    header.add("oauth_signature=\"" + encode(signature) + "\"");
-
-    return header.toString();
+    // Step 4: Build Authorization header
+    return "OAuth "
+        + oauthParams.entrySet().stream()
+            .map(e -> encode(e.getKey()) + "=\"" + encode(e.getValue()) + "\"")
+            .collect(Collectors.joining(", "));
   }
 
   private String hmacSha1(String data, String key) {
@@ -92,12 +84,12 @@ public class TwitterAuthServiceImpl implements TwitterAuthService {
       byte[] rawHmac = mac.doFinal(data.getBytes(StandardCharsets.UTF_8));
       return Base64.getEncoder().encodeToString(rawHmac);
     } catch (Exception e) {
-      throw new RuntimeException("Failed to generate HMAC : " + e.getMessage(), e);
+      throw new RuntimeException("Failed to generate HMAC: " + e.getMessage(), e);
     }
   }
 
-  private String encode(String s) {
-    return URLEncoder.encode(s, StandardCharsets.UTF_8)
+  private String encode(String value) {
+    return URLEncoder.encode(value, StandardCharsets.UTF_8)
         .replace("+", "%20")
         .replace("*", "%2A")
         .replace("%7E", "~");

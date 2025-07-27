@@ -5,5 +5,5 @@ import io.vertx.core.json.JsonObject;
 
 public interface TweetService {
 
-  Uni<JsonObject> postTweet(String tweetText);
+  Uni<JsonObject> tweet(String tweetText);
 }
