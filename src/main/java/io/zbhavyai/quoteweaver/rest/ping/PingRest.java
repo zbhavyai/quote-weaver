@@ -13,12 +13,7 @@ import jakarta.ws.rs.core.Response;
 @Path("/ping")
 public class PingRest {
 
-  private final PingService _service;
-
-  @Inject
-  public PingRest(PingService service) {
-    _service = service;
-  }
+  @Inject private PingService _service;
 
   @GET
   @Produces(MediaType.TEXT_PLAIN)

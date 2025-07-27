@@ -2,6 +2,7 @@ package io.zbhavyai.quoteweaver.service.celebrity;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.quarkus.runtime.Startup;
+import io.smallrye.mutiny.Uni;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import java.io.InputStream;
@@ -46,15 +47,18 @@ public class CelebrityServiceImpl implements CelebrityService {
     }
   }
 
-  public List<String> getCelebrityList() {
-    return _celebrityNames;
+  @Override
+  public Uni<List<String>> getCelebrityList() {
+    return Uni.createFrom().item(_celebrityNames);
   }
 
-  public String getRandomCelebrity() {
+  @Override
+  public Uni<String> getRandomCelebrity() {
     if (_celebrityNames.isEmpty()) {
       throw new IllegalStateException("Celebrity list is empty");
     }
 
-    return _celebrityNames.get(ThreadLocalRandom.current().nextInt(_celebrityNames.size()));
+    return Uni.createFrom()
+        .item(_celebrityNames.get(ThreadLocalRandom.current().nextInt(_celebrityNames.size())));
   }
 }
