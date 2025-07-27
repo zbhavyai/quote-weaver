@@ -1,7 +1,6 @@
 package io.zbhavyai.quoteweaver.service.twitter;
 
 import io.smallrye.mutiny.Uni;
-import io.smallrye.mutiny.infrastructure.Infrastructure;
 import io.vertx.core.json.JsonObject;
 import io.zbhavyai.quoteweaver.client.TwitterClient;
 import io.zbhavyai.quoteweaver.dto.twitter.PostTweetReq;
@@ -39,9 +38,8 @@ public class TweetServiceImpl implements TweetService {
     String endpoint = _twitterBaseURL + "/2/tweets";
     String authHeader = _authService.generateOAuth1Header(HttpMethod.POST, endpoint);
 
-    return Uni.createFrom()
-        .item(() -> _twitterClient.tweet(authHeader, new PostTweetReq(tweetText)))
-        .runSubscriptionOn(Infrastructure.getDefaultExecutor())
+    return _twitterClient
+        .tweet(authHeader, new PostTweetReq(tweetText))
         .onItem()
         .invoke(x -> LOG.debug("Twitter API response = {}", x.encodePrettily()));
   }

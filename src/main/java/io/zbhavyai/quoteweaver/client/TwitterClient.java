@@ -1,5 +1,6 @@
 package io.zbhavyai.quoteweaver.client;
 
+import io.smallrye.mutiny.Uni;
 import io.vertx.core.json.JsonObject;
 import io.zbhavyai.quoteweaver.dto.twitter.PostTweetReq;
 import jakarta.ws.rs.Consumes;
@@ -18,5 +19,5 @@ public interface TwitterClient {
   @Path("/tweets")
   @Consumes(MediaType.APPLICATION_JSON)
   @Produces(MediaType.APPLICATION_JSON)
-  JsonObject tweet(@HeaderParam("Authorization") String authHeader, PostTweetReq tweetReq);
+  Uni<JsonObject> tweet(@HeaderParam("Authorization") String authHeader, PostTweetReq tweetReq);
 }
