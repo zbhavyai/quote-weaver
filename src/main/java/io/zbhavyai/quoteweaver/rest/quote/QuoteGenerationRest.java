@@ -21,6 +21,9 @@ public class QuoteGenerationRest {
   @Consumes(MediaType.APPLICATION_JSON)
   @Produces(MediaType.APPLICATION_JSON)
   public Uni<Response> generateQuote(GenerateQuoteReq quoteReq) {
-    return _service.generateQuote(quoteReq).onItem().transform(ResponseUtils::handleSuccess);
+    return _service
+        .generateQuote(quoteReq.celebrity())
+        .onItem()
+        .transform(ResponseUtils::handleSuccess);
   }
 }

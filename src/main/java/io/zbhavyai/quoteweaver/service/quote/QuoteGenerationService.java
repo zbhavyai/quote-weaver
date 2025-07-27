@@ -1,10 +1,9 @@
 package io.zbhavyai.quoteweaver.service.quote;
 
 import io.smallrye.mutiny.Uni;
-import io.zbhavyai.quoteweaver.dto.quote.GenerateQuoteReq;
-import io.zbhavyai.quoteweaver.dto.quote.Quote;
+import io.zbhavyai.quoteweaver.dto.quote.GenerateQuoteRes;
 
 public interface QuoteGenerationService {
 
-  Uni<Quote> generateQuote(GenerateQuoteReq quoteReq);
+  Uni<GenerateQuoteRes> generateQuote(String celebrity);
 }

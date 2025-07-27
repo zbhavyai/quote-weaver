@@ -2,9 +2,9 @@ package io.zbhavyai.quoteweaver.service.quote;
 
 import io.smallrye.mutiny.Uni;
 import io.smallrye.mutiny.infrastructure.Infrastructure;
+import io.vertx.core.json.JsonObject;
 import io.zbhavyai.quoteweaver.ai.QuoteGenerator;
-import io.zbhavyai.quoteweaver.dto.quote.GenerateQuoteReq;
-import io.zbhavyai.quoteweaver.dto.quote.Quote;
+import io.zbhavyai.quoteweaver.dto.quote.GenerateQuoteRes;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import org.slf4j.Logger;
@@ -18,12 +18,14 @@ public class QuoteGenerationServiceImpl implements QuoteGenerationService {
   @Inject QuoteGenerator _quoteGenerator;
 
   @Override
-  public Uni<Quote> generateQuote(GenerateQuoteReq req) {
-    LOG.info("generateQuote: topic={} figure={}", req.topic(), req.figure());
+  public Uni<GenerateQuoteRes> generateQuote(String celebrity) {
+    LOG.info("generateQuote");
 
     return Uni.createFrom()
-        .item(() -> _quoteGenerator.generateQuote(req.topic(), req.figure()))
-        .map(res -> new Quote(req.topic(), req.figure(), res.quote()))
-        .runSubscriptionOn(Infrastructure.getDefaultExecutor());
+        .item(() -> _quoteGenerator.generateQuote(celebrity))
+        .runSubscriptionOn(Infrastructure.getDefaultExecutor())
+        .onItem()
+        .invoke(
+            quote -> LOG.info("Generated Quote: {}", JsonObject.mapFrom(quote).encodePrettily()));
   }
 }
