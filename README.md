@@ -1,5 +1,8 @@
 # Quote Weaver
 
+[![Build](https://img.shields.io/github/actions/workflow/status/zbhavyai/quote-weaver/build.yml?label=Build)](https://github.com/zbhavyai/quote-weaver/actions/workflows/build.yml)
+[![License](https://img.shields.io/github/license/zbhavyai/quote-weaver?label=License)](https://github.com/zbhavyai/quote-weaver/blob/main/LICENSE)
+
 Generating humorous rhyming quotes using Gemini API on programming topics, and as if they were said by a celebrity.
 
 ## Development
