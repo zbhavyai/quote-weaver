@@ -45,7 +45,7 @@ help:
 	@echo "  format            - Auto format all the java files"
 	@echo "  build             - Build project's JAR locally"
 	@echo "  build-native      - Build project's native executable locally"
-	@echo "  container-build   - Build project's native executable in containers and create container images"
+	@echo "  container-build   - Build project in containers and create container images"
 	@echo "  container-run     - Run project containers"
 	@echo "  container-stop    - Stop project containers"
 	@echo "  container-logs    - Show project container logs"

@@ -4,7 +4,7 @@ services:
   quoteweaver:
     build:
       context: .
-      dockerfile: Dockerfile.native
+      dockerfile: Dockerfile.jvm
     image: quoteweaver:1.0.0
     container_name: quoteweaver
     restart: unless-stopped
