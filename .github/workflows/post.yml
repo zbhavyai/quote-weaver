@@ -1,0 +1,36 @@
+name: Post
+
+on:
+  schedule:
+    - cron: "0 0 * * *"
+  workflow_dispatch:
+
+jobs:
+  daily-quote:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Set up JDK
+        uses: actions/setup-java@v4
+        with:
+          java-version: "21"
+          distribution: "temurin"
+          architecture: x64
+          cache: maven
+
+      - name: Build application
+        run: ./mvnw --batch-mode verify -DskipTests
+
+      - name: Run application
+        run: java -jar target/quoteweaver-*-runner.jar
+        env:
+          QUARKUS_LANGCHAIN4J_AI_GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          TWITTER_API_KEY: ${{ secrets.TWITTER_API_KEY }}
+          TWITTER_API_KEY_SECRET: ${{ secrets.TWITTER_API_KEY_SECRET }}
+          TWITTER_API_ACCESS_TOKEN: ${{ secrets.TWITTER_API_ACCESS_TOKEN }}
+          TWITTER_API_ACCESS_TOKEN_SECRET: ${{ secrets.TWITTER_API_ACCESS_TOKEN_SECRET }}
