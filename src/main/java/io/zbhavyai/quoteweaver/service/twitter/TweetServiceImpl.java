@@ -25,7 +25,7 @@ public class TweetServiceImpl implements TweetService {
   public TweetServiceImpl(
       TwitterAuthService authService,
       @RestClient TwitterClient twitterClient,
-      @ConfigProperty(name = "quarkus.rest-client.twitter-api.url") String twitterBaseURL) {
+      @ConfigProperty(name = "quarkus.rest-client.twitter.url") String twitterBaseURL) {
     _authService = authService;
     _twitterClient = twitterClient;
     _twitterBaseURL = twitterBaseURL;

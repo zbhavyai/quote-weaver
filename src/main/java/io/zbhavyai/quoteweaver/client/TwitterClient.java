@@ -11,7 +11,7 @@ import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
 import org.eclipse.microprofile.rest.client.inject.RegisterRestClient;
 
-@RegisterRestClient(configKey = "twitter-api")
+@RegisterRestClient(configKey = "twitter")
 @Path("/2")
 public interface TwitterClient {
 

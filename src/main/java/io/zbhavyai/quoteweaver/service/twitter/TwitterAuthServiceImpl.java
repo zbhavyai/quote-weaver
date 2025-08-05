@@ -28,10 +28,10 @@ public class TwitterAuthServiceImpl implements TwitterAuthService {
 
   @Inject
   public TwitterAuthServiceImpl(
-      @ConfigProperty(name = "twitter-api.api-key") String apiKey,
-      @ConfigProperty(name = "twitter-api.api-key-secret") String apiSecret,
-      @ConfigProperty(name = "twitter-api.access-token") String accessToken,
-      @ConfigProperty(name = "twitter-api.access-token-secret") String accessTokenSecret) {
+      @ConfigProperty(name = "twitter.api-key") String apiKey,
+      @ConfigProperty(name = "twitter.api-key-secret") String apiSecret,
+      @ConfigProperty(name = "twitter.api-access-token") String accessToken,
+      @ConfigProperty(name = "twitter.api-access-token-secret") String accessTokenSecret) {
 
     _apiKey = apiKey;
     _apiSecret = apiSecret;
