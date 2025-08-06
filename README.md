@@ -18,3 +18,20 @@ Generating and tweeting humorous rhyming quotes using Gemini API on programming 
 
 > [!NOTE]
 > This application is configured to work like a command line application, and running it in the dev mode or executing the application's JAR/executable would post the tweet.
+
+## Sample Tweets
+
+The final tweet posted would look like this:
+
+```
+A faulty line, a hidden blight,
+It steals away my coding light.
+I search and probe with earnest plea,
+To find the truth, and set it free.
+
+- as if by Andrew Garfield
+
+#quoteweaver #project #rhymingquotes #technology #programming
+```
+
+See my [X profile](https://x.com/zbhavyai/) for more such tweets.
