@@ -1,0 +1,50 @@
+name: Create release
+
+on:
+  push:
+    tags:
+      - "v*"
+
+jobs:
+  create-release:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    env:
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Determine previous tag
+        id: prev
+        run: |
+          CURRENT_TAG="${GITHUB_REF_NAME}"
+          PREV_TAG=$(git tag --sort=-creatordate | grep '^v' | grep -v "^${CURRENT_TAG}$" | head -n 1 || true)
+
+          echo "Current tag: $CURRENT_TAG"
+          echo "Previous tag: $PREV_TAG"
+
+          echo "prev_tag=$PREV_TAG" >> $GITHUB_OUTPUT
+
+      - name: Create GitHub release
+        env:
+          CURRENT_TAG: ${{ github.ref_name }}
+          PREV_TAG: ${{ steps.prev.outputs.prev_tag }}
+        run: |
+          REPO="${{ github.repository }}"
+
+          if [ -n "${PREV_TAG}" ]; then
+            BODY="Changelog: https://github.com/${REPO}/compare/${PREV_TAG}...${CURRENT_TAG}"
+          else
+            BODY="Initial release"
+          fi
+
+          echo "Creating release for tag: ${CURRENT_TAG}"
+          echo "Release notes: ${BODY}"
+
+          gh release create "${CURRENT_TAG}" \
+            --title "${CURRENT_TAG}" \
+            --generate-notes
