@@ -16,7 +16,7 @@ public class OrchestratorServiceImpl implements OrchestratorService {
   private static final Logger LOG = LoggerFactory.getLogger(OrchestratorServiceImpl.class);
 
   private static final String HASHTAGS =
-      "#quoteweaver #project #rhymingquotes #technology #programming";
+      "#quoteweaver #rhymingquotes #programmingquotes #project #quarkus";
 
   @Inject private CelebrityService _celebrityService;
   @Inject private QuoteGenerationService _quoteService;
