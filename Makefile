@@ -3,7 +3,7 @@ CONTAINER_ENGINE := $(shell if command -v podman &>/dev/null; then echo podman; 
 .PHONY: prep clean dev format build run container-build container-run container-stop container-logs container-destroy help
 
 prep:
-	@ln -sf $(CURDIR)/.hooks/pre-commit .git/hooks/pre-commit
+	@ln -sf $(CURDIR)/.hooks/pre-commit.sh .git/hooks/pre-commit
 	@echo "Hook installed";
 
 clean:
