@@ -28,14 +28,14 @@ The list of celebrities was exported from IMDb's list of [Top 1000 Actors and Ac
 The final tweet posted would look like this:
 
 ```
-A faulty line, a hidden blight,
-It steals away my coding light.
-I search and probe with earnest plea,
-To find the truth, and set it free.
+This old code, it runs so slow,
+A tangled mess, where seeds don't grow.
+But deep inside, a purpose lies,
+Beneath the dust, a truth that never dies.
 
-- as if by Andrew Garfield
+- as if by Kevin Costner
 
-#quoteweaver #project #rhymingquotes #technology #programming
+#quoteweaver #rhymingquotes #programmingquotes #project #quarkus
 ```
 
 See my [X profile](https://x.com/zbhavyai/) for more such tweets.
