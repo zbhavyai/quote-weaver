@@ -1,5 +1,6 @@
 package io.zbhavyai.quoteweaver.service.quote;
 
+import dev.langchain4j.data.image.Image;
 import io.smallrye.mutiny.Uni;
 import io.smallrye.mutiny.infrastructure.Infrastructure;
 import io.vertx.core.json.JsonObject;
@@ -28,5 +29,16 @@ public class QuoteGenerationServiceImpl implements QuoteGenerationService {
         .invoke(
             quote -> LOG.info("generated quote: \n{}", JsonObject.mapFrom(quote).encodePrettily()))
         .map(quote -> new Quote(quote.quote(), celebrity));
+  }
+
+  @Override
+  public Uni<String> generateImage(String quoteText) {
+    LOG.info("generateImage: {}", quoteText);
+
+    return Uni.createFrom()
+        .item(() -> _quoteGenerator.generateImage(quoteText))
+        .onItem()
+        .transform(Image::base64Data)
+        .runSubscriptionOn(Infrastructure.getDefaultExecutor());
   }
 }

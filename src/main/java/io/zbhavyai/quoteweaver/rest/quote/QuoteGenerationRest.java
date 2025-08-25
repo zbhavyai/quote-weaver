@@ -2,6 +2,7 @@ package io.zbhavyai.quoteweaver.rest.quote;
 
 import io.smallrye.mutiny.Uni;
 import io.zbhavyai.quoteweaver.dto.quote.GenerateQuoteReq;
+import io.zbhavyai.quoteweaver.dto.quote.Quote;
 import io.zbhavyai.quoteweaver.rest.utils.ResponseUtils;
 import io.zbhavyai.quoteweaver.service.quote.QuoteGenerationService;
 import jakarta.inject.Inject;
@@ -23,6 +24,17 @@ public class QuoteGenerationRest {
   public Uni<Response> generateQuote(GenerateQuoteReq quoteReq) {
     return _service
         .generateQuote(quoteReq.celebrity())
+        .onItem()
+        .transform(ResponseUtils::handleSuccess);
+  }
+
+  @POST
+  @Path("/image")
+  @Consumes
+  @Produces(MediaType.APPLICATION_JSON)
+  public Uni<Response> generateImage(Quote imageReq) {
+    return _service
+        .generateImage(imageReq.quote())
         .onItem()
         .transform(ResponseUtils::handleSuccess);
   }

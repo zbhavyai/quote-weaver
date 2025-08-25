@@ -6,4 +6,6 @@ import io.zbhavyai.quoteweaver.dto.quote.Quote;
 public interface QuoteGenerationService {
 
   Uni<Quote> generateQuote(String celebrity);
+
+  Uni<String> generateImage(String quoteText);
 }
