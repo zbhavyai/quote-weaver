@@ -1,6 +1,5 @@
 package io.zbhavyai.quoteweaver.ai;
 
-import dev.langchain4j.data.image.Image;
 import dev.langchain4j.service.SystemMessage;
 import dev.langchain4j.service.UserMessage;
 import io.quarkiverse.langchain4j.RegisterAiService;
@@ -42,19 +41,23 @@ public interface QuoteGenerator {
       """)
   GenerateQuoteRes generateQuote(String celebrity);
 
-  @SystemMessage(
-      """
-      You are an expert AI image generator. Your task is to create artistic and metaphorical images that capture the essence of a given quote.
-
-      The image should not be a literal depiction of the quote's text, but rather an abstract or symbolic representation that conveys the underlying emotion and meaning.
-      The style should be modern and visually appealing, suitable for sharing on social media platforms.
-
-      Ensure the generated image is high quality and visually engaging.
-      """)
-  @UserMessage(
-      """
-      Generate an image that visually represents the following quote:
-      "{quoteText}"
-      """)
-  Image generateImage(String quoteText);
+  // NOT IMPLETMENTED BY LANGCHAIN4J YET
+  //  @SystemMessage(
+  //      """
+  //      You are an expert AI image generator. Your task is to create artistic and metaphorical
+  // images that capture the essence of a given quote.
+  //
+  //      The image should not be a literal depiction of the quote's text, but rather an abstract or
+  // symbolic representation that conveys the underlying emotion and meaning.
+  //      The style should be modern and visually appealing, suitable for sharing on social media
+  // platforms.
+  //
+  //      Ensure the generated image is high quality and visually engaging.
+  //      """)
+  //  @UserMessage(
+  //      """
+  //      Generate an image that visually represents the following quote:
+  //      "{quoteText}"
+  //      """)
+  //  Image generateImage(String quoteText);
 }

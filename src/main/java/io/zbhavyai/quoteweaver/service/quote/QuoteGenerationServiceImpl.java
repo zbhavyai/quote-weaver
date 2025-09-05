@@ -4,6 +4,7 @@ import dev.langchain4j.data.image.Image;
 import io.smallrye.mutiny.Uni;
 import io.smallrye.mutiny.infrastructure.Infrastructure;
 import io.vertx.core.json.JsonObject;
+import io.zbhavyai.quoteweaver.ai.ImageGenerator;
 import io.zbhavyai.quoteweaver.ai.QuoteGenerator;
 import io.zbhavyai.quoteweaver.dto.quote.Quote;
 import jakarta.enterprise.context.ApplicationScoped;
@@ -17,6 +18,7 @@ public class QuoteGenerationServiceImpl implements QuoteGenerationService {
   private static final Logger LOG = LoggerFactory.getLogger(QuoteGenerationServiceImpl.class);
 
   @Inject QuoteGenerator _quoteGenerator;
+  @Inject ImageGenerator _imageGenerator;
 
   @Override
   public Uni<Quote> generateQuote(String celebrity) {
@@ -36,7 +38,7 @@ public class QuoteGenerationServiceImpl implements QuoteGenerationService {
     LOG.info("generateImage: {}", quoteText);
 
     return Uni.createFrom()
-        .item(() -> _quoteGenerator.generateImage(quoteText))
+        .item(() -> _imageGenerator.generateImage(quoteText))
         .onItem()
         .transform(Image::base64Data)
         .runSubscriptionOn(Infrastructure.getDefaultExecutor());
