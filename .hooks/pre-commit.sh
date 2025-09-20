@@ -9,7 +9,7 @@ block() {
     exit 1
 }
 
-lint_checks() {
+format_checks() {
     local staged
     staged=$(git diff --name-only --cached --exit-code -- '*.java')
     ret=$?
@@ -17,7 +17,7 @@ lint_checks() {
         return 0
     fi
 
-    (./mvnw --quiet spotless:check) || block "[ERROR] Lint checks failed; run 'make format' to fix."
+    (./mvnw --quiet --batch-mode spotless:check) || block "[ERROR] Formatting checks failed; run 'make format' to fix."
 }
 
-(lint_checks) || exit $?
+(format_checks) || exit $?
