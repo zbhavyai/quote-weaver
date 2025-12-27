@@ -1,13 +1,13 @@
-CONTAINER_ENGINE := $(shell if command -v podman &>/dev/null; then echo podman; else echo docker; fi)
+CONTAINER_ENGINE := $(shell if command -v podman >/dev/null 2>&1; then echo podman; else echo docker; fi)
 
-.PHONY: prep clean dev format check-updates build run container-build container-run container-stop container-logs container-destroy help
+.PHONY: prep clean dev format check-updates build run build-native run-native container-build container-run container-stop container-logs container-destroy help
 
 prep:
 	@ln -sf $(CURDIR)/.hooks/pre-commit.sh .git/hooks/pre-commit
 	@echo "Hook installed";
 
 clean:
-	@./mvnw --quiet clean;
+	@./mvnw --quiet --batch-mode clean;
 	@echo "Cleaned build artifacts";
 
 dev:
@@ -24,6 +24,12 @@ build:
 
 run:
 	@java -jar target/quoteweaver-*-runner.jar
+
+build-native:
+	@./mvnw clean verify -Dnative
+
+run-native:
+	@./target/quoteweaver-*-runner
 
 container-build:
 	@$(CONTAINER_ENGINE) compose build
@@ -49,6 +55,8 @@ help:
 	@echo "  check-updates     - Check for dependency updates in the pom.xml"
 	@echo "  build             - Build project's JAR locally"
 	@echo "  run               - Run project locally"
+	@echo "  build-native      - Build project's native executable locally"
+	@echo "  run-native        - Run project native executable locally"
 	@echo "  container-build   - Build project in containers and create container images"
 	@echo "  container-run     - Run project containers"
 	@echo "  container-stop    - Stop project containers"
