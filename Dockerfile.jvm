@@ -1,15 +1,18 @@
-# Build Stage
+# build stage
 FROM docker.io/library/eclipse-temurin:21-jdk AS build
+USER root
 WORKDIR /opt/app
 COPY pom.xml mvnw ./
 COPY .mvn .mvn
-RUN ./mvnw --batch-mode dependency:go-offline
+RUN --mount=type=cache,target=/root/.m2 ./mvnw --batch-mode dependency:go-offline
 COPY src src
-RUN ./mvnw package -DskipTests
+RUN --mount=type=cache,target=/root/.m2 ./mvnw --batch-mode package -DskipTests -DskipITs
 
-# Runtime Stage
+# runtime stage
 FROM docker.io/library/eclipse-temurin:21-jre
 WORKDIR /opt/app
 COPY --from=build /opt/app/target/quoteweaver-*-runner.jar quoteweaver-runner.jar
+RUN chmod -R "g+rwX" /opt/app && chown -R 1001:root /opt/app
 EXPOSE 3003
+USER 1001
 CMD ["java", "-jar", "/opt/app/quoteweaver-runner.jar"]
