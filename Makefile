@@ -1,6 +1,6 @@
 CONTAINER_ENGINE := $(shell if command -v podman &>/dev/null; then echo podman; else echo docker; fi)
 
-.PHONY: prep clean dev format build run container-build container-run container-stop container-logs container-destroy help
+.PHONY: prep clean dev format check-updates build run container-build container-run container-stop container-logs container-destroy help
 
 prep:
 	@ln -sf $(CURDIR)/.hooks/pre-commit.sh .git/hooks/pre-commit
@@ -16,8 +16,11 @@ dev:
 format:
 	@./mvnw spotless:apply
 
+check-updates:
+	@./mvnw versions:display-property-updates
+
 build:
-	@./mvnw --batch-mode clean verify
+	@./mvnw clean verify
 
 run:
 	@java -jar target/quoteweaver-*-runner.jar
@@ -43,6 +46,7 @@ help:
 	@echo "  clean             - Clean build artifacts"
 	@echo "  dev               - Start project in development mode"
 	@echo "  format            - Auto format all the java files"
+	@echo "  check-updates     - Check for dependency updates in the pom.xml"
 	@echo "  build             - Build project's JAR locally"
 	@echo "  run               - Run project locally"
 	@echo "  container-build   - Build project in containers and create container images"
