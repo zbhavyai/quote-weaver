@@ -7,8 +7,8 @@ services:
       dockerfile: Dockerfile.jvm
       args:
         BUILD_COMMIT: "${BUILD_COMMIT}"
-    image: localhost/quoteweaver:${BUILD_COMMIT}
-    container_name: quoteweaver
+    image: localhost/quote-weaver:${BUILD_COMMIT}
+    container_name: quote-weaver
     restart: unless-stopped
     environment:
       - BUILD_COMMIT=${BUILD_COMMIT}
