@@ -2,9 +2,8 @@
 FROM quay.io/quarkus/ubi9-quarkus-mandrel-builder-image:jdk-21 AS build
 USER root
 WORKDIR /opt/app
-COPY --chown=quarkus:quarkus pom.xml mvnw ./
-COPY --chown=quarkus:quarkus .mvn .mvn
-USER quarkus
+COPY pom.xml mvnw ./
+COPY .mvn .mvn
 RUN --mount=type=cache,target=/root/.m2 ./mvnw --batch-mode dependency:go-offline
 COPY src src
 RUN --mount=type=cache,target=/root/.m2 ./mvnw --batch-mode package -Dnative -DskipTests
