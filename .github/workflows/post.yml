@@ -5,9 +5,16 @@ on:
     - cron: "0 0 * * *"
   workflow_dispatch:
 
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: ${{ github.repository }}
+
 jobs:
   daily-quote:
     runs-on: ubuntu-latest
+
+    permissions:
+      packages: read
 
     steps:
       - name: Checkout repo
@@ -15,22 +22,19 @@ jobs:
         with:
           fetch-depth: 1
 
-      - name: Set up JDK
-        uses: actions/setup-java@v4
+      - name: Login to GHCR
+        uses: docker/login-action@v3
         with:
-          java-version: "21"
-          distribution: "temurin"
-          architecture: x64
-          cache: maven
-
-      - name: Build application
-        run: ./mvnw --batch-mode verify -DskipTests
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Run application
-        run: java -jar target/quoteweaver-*-runner.jar
-        env:
-          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
-          TWITTER_API_KEY: ${{ secrets.TWITTER_API_KEY }}
-          TWITTER_API_KEY_SECRET: ${{ secrets.TWITTER_API_KEY_SECRET }}
-          TWITTER_API_ACCESS_TOKEN: ${{ secrets.TWITTER_API_ACCESS_TOKEN }}
-          TWITTER_API_ACCESS_TOKEN_SECRET: ${{ secrets.TWITTER_API_ACCESS_TOKEN_SECRET }}
+        run: |
+          docker container run --rm \
+            --env GEMINI_API_KEY="${{ secrets.GEMINI_API_KEY }}" \
+            --env TWITTER_API_KEY="${{ secrets.TWITTER_API_KEY }}" \
+            --env TWITTER_API_KEY_SECRET="${{ secrets.TWITTER_API_KEY_SECRET }}" \
+            --env TWITTER_API_ACCESS_TOKEN="${{ secrets.TWITTER_API_ACCESS_TOKEN }}" \
+            --env TWITTER_API_ACCESS_TOKEN_SECRET="${{ secrets.TWITTER_API_ACCESS_TOKEN_SECRET }}" \
+            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
