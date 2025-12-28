@@ -13,6 +13,7 @@ FROM docker.io/library/eclipse-temurin:21-jre
 ARG BUILD_COMMIT
 LABEL org.opencontainers.image.version="${BUILD_COMMIT}"
 WORKDIR /opt/app
+ENV HOME=/opt/app
 COPY --from=build /opt/app/target/quoteweaver-*-runner.jar quoteweaver-runner.jar
 RUN chmod -R "g+rwX" /opt/app && chown -R 1001:root /opt/app
 EXPOSE 8080

@@ -17,6 +17,7 @@ FROM quay.io/quarkus/ubi9-quarkus-micro-image:2.0
 ARG BUILD_COMMIT
 LABEL org.opencontainers.image.version="${BUILD_COMMIT}"
 WORKDIR /opt/app
+ENV HOME=/opt/app
 COPY --from=build /opt/app/target/quoteweaver-*-runner /opt/app/quoteweaver-runner
 COPY --from=curl /usr/bin/curl /usr/bin/curl
 RUN chmod -R "g+rwX" /opt/app && chown -R 1001:root /opt/app
