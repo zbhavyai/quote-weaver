@@ -5,9 +5,13 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.jvm
-    image: quoteweaver:1.0.0
+      args:
+        BUILD_COMMIT: "${BUILD_COMMIT}"
+    image: localhost/quoteweaver:${BUILD_COMMIT}
     container_name: quoteweaver
-    restart: no
+    restart: unless-stopped
+    environment:
+      - BUILD_COMMIT=${BUILD_COMMIT}
     ports:
       - "3003:3003"
     healthcheck:

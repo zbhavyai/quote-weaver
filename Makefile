@@ -1,4 +1,5 @@
 CONTAINER_ENGINE := $(shell if command -v podman >/dev/null 2>&1; then echo podman; else echo docker; fi)
+BUILD_COMMIT :=$(shell git rev-parse --short HEAD)
 
 .PHONY: prep clean dev format check-updates build run build-native run-native container-build container-run container-stop container-logs container-destroy help
 
@@ -32,19 +33,19 @@ run-native:
 	@./target/quoteweaver-*-runner
 
 container-build:
-	@$(CONTAINER_ENGINE) compose build
+	@BUILD_COMMIT=$(BUILD_COMMIT) $(CONTAINER_ENGINE) compose build
 
 container-run:
-	@$(CONTAINER_ENGINE) compose up --detach
+	@BUILD_COMMIT=$(BUILD_COMMIT) $(CONTAINER_ENGINE) compose up --detach
 
 container-stop:
-	@$(CONTAINER_ENGINE) compose down
+	@BUILD_COMMIT=$(BUILD_COMMIT) $(CONTAINER_ENGINE) compose down
 
 container-logs:
-	@$(CONTAINER_ENGINE) compose logs --follow
+	@BUILD_COMMIT=$(BUILD_COMMIT) $(CONTAINER_ENGINE) compose logs --follow
 
 container-destroy:
-	@$(CONTAINER_ENGINE) compose down --volumes --rmi local
+	@BUILD_COMMIT=$(BUILD_COMMIT) $(CONTAINER_ENGINE) compose down --volumes --rmi local
 
 help:
 	@echo "Available targets:"
