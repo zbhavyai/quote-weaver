@@ -21,7 +21,7 @@ WORKDIR /opt/app
 COPY --from=build /opt/app/target/quoteweaver-*-runner /opt/app/quoteweaver-runner
 COPY --from=curl /usr/bin/curl /usr/bin/curl
 RUN chmod -R "g+rwX" /opt/app && chown -R 1001:root /opt/app
-EXPOSE 3003
+EXPOSE 8080
 USER 1001
 ENV BUILD_COMMIT=${BUILD_COMMIT}
 CMD ["/opt/app/quoteweaver-runner"]
