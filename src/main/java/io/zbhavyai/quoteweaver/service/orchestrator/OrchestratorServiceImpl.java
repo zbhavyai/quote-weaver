@@ -29,14 +29,16 @@ public class OrchestratorServiceImpl implements OrchestratorService {
     _celebrityService
         .getRandomCelebrity()
         .onItem()
-        .invoke(celebrity -> LOG.info("Selected celebrity: {}", celebrity))
+        .invoke(celebrity -> LOG.debug("Selected celebrity: {}", celebrity))
         .chain(celebrity -> _quoteService.generateQuote(celebrity))
         .onItem()
-        .invoke(quote -> LOG.info("Generated quote: {}", quote.quote()))
+        .invoke(quote -> LOG.debug("Generated quote: \n{}", quote.quote()))
         .onItem()
         .transform(this::transformQuoteForTweet)
         .chain(text -> _tweetService.tweet(text))
-        .runSubscriptionOn(Infrastructure.getDefaultExecutor())
+        .onItem()
+        .invoke(post -> LOG.info("Tweet posted with ID: {}", _tweetService.extractTweetId(post)))
+        .runSubscriptionOn(Infrastructure.getDefaultWorkerPool())
         .await()
         .indefinitely();
   }

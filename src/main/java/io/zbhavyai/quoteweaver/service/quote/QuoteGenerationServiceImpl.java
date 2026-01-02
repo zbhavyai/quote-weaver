@@ -3,7 +3,6 @@ package io.zbhavyai.quoteweaver.service.quote;
 import dev.langchain4j.data.image.Image;
 import io.smallrye.mutiny.Uni;
 import io.smallrye.mutiny.infrastructure.Infrastructure;
-import io.vertx.core.json.JsonObject;
 import io.zbhavyai.quoteweaver.ai.ImageGenerator;
 import io.zbhavyai.quoteweaver.ai.QuoteGenerator;
 import io.zbhavyai.quoteweaver.dto.quote.Quote;
@@ -26,11 +25,8 @@ public class QuoteGenerationServiceImpl implements QuoteGenerationService {
 
     return Uni.createFrom()
         .item(() -> _quoteGenerator.generateQuote(celebrity))
-        .runSubscriptionOn(Infrastructure.getDefaultExecutor())
-        .onItem()
-        .invoke(
-            quote -> LOG.info("generated quote: \n{}", JsonObject.mapFrom(quote).encodePrettily()))
-        .map(quote -> new Quote(quote.quote(), celebrity));
+        .map(quote -> new Quote(quote.quote(), celebrity))
+        .runSubscriptionOn(Infrastructure.getDefaultWorkerPool());
   }
 
   @Override
@@ -39,8 +35,7 @@ public class QuoteGenerationServiceImpl implements QuoteGenerationService {
 
     return Uni.createFrom()
         .item(() -> _imageGenerator.generateImage(quoteText))
-        .onItem()
-        .transform(Image::base64Data)
-        .runSubscriptionOn(Infrastructure.getDefaultExecutor());
+        .map(Image::base64Data)
+        .runSubscriptionOn(Infrastructure.getDefaultWorkerPool());
   }
 }

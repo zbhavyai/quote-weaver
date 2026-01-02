@@ -28,7 +28,7 @@ public class CelebrityServiceImpl implements CelebrityService {
 
   @Startup
   void loadCelebrities() {
-    LOG.debug("loadCelebrities");
+    LOG.info("loadCelebrities");
 
     try (InputStream is = getClass().getClassLoader().getResourceAsStream("celebrities.json")) {
       if (is == null) {
@@ -49,11 +49,15 @@ public class CelebrityServiceImpl implements CelebrityService {
 
   @Override
   public Uni<List<String>> getCelebrityList() {
+    LOG.info("getCelebrityList");
+
     return Uni.createFrom().item(_celebrityNames);
   }
 
   @Override
   public Uni<String> getRandomCelebrity() {
+    LOG.info("getRandomCelebrity");
+
     if (_celebrityNames.isEmpty()) {
       throw new IllegalStateException("Celebrity list is empty");
     }

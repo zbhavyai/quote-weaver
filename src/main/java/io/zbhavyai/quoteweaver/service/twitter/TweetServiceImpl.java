@@ -33,14 +33,21 @@ public class TweetServiceImpl implements TweetService {
 
   @Override
   public Uni<JsonObject> tweet(String tweetText) {
-    LOG.debug("tweet: text={}", tweetText);
+    LOG.info("tweet: text=\n{}", tweetText);
 
     String endpoint = _twitterBaseURL + "/2/tweets";
     String authHeader = _authService.generateOAuth1Header(HttpMethod.POST, endpoint);
 
-    return _twitterClient
-        .tweet(authHeader, new PostTweetReq(tweetText))
-        .onItem()
-        .invoke(x -> LOG.debug("Twitter API response = {}", x.encodePrettily()));
+    return _twitterClient.tweet(authHeader, new PostTweetReq(tweetText));
+  }
+
+  @Override
+  public String extractTweetId(JsonObject response) {
+    try {
+      return response.getJsonObject("data").getString("id");
+    } catch (Exception e) {
+      LOG.error("Failed to extract tweet ID from response: {}", response, e);
+      return null;
+    }
   }
 }
