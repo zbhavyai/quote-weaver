@@ -16,7 +16,7 @@ public class Main implements Runnable, QuarkusApplication {
 
   @Override
   public void run() {
-    _service.postQuote();
+    _service.postQuote().subscribe().with(ignored -> {});
   }
 
   @Override

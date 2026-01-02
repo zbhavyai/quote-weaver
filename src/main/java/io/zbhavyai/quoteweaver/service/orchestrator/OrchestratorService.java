@@ -1,6 +1,8 @@
 package io.zbhavyai.quoteweaver.service.orchestrator;
 
+import io.smallrye.mutiny.Uni;
+
 public interface OrchestratorService {
 
-  void postQuote();
+  Uni<Void> postQuote();
 }

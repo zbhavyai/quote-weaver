@@ -1,6 +1,6 @@
 package io.zbhavyai.quoteweaver.service.orchestrator;
 
-import io.smallrye.mutiny.infrastructure.Infrastructure;
+import io.smallrye.mutiny.Uni;
 import io.zbhavyai.quoteweaver.dto.quote.Quote;
 import io.zbhavyai.quoteweaver.service.celebrity.CelebrityService;
 import io.zbhavyai.quoteweaver.service.quote.QuoteGenerationService;
@@ -23,10 +23,10 @@ public class OrchestratorServiceImpl implements OrchestratorService {
   @Inject private TweetService _tweetService;
 
   @Override
-  public void postQuote() {
+  public Uni<Void> postQuote() {
     LOG.info("postQuote");
 
-    _celebrityService
+    return _celebrityService
         .getRandomCelebrity()
         .onItem()
         .invoke(celebrity -> LOG.debug("Selected celebrity: {}", celebrity))
@@ -38,9 +38,7 @@ public class OrchestratorServiceImpl implements OrchestratorService {
         .chain(text -> _tweetService.tweet(text))
         .onItem()
         .invoke(post -> LOG.info("Tweet posted with ID: {}", _tweetService.extractTweetId(post)))
-        .runSubscriptionOn(Infrastructure.getDefaultWorkerPool())
-        .await()
-        .indefinitely();
+        .replaceWithVoid();
   }
 
   private String transformQuoteForTweet(Quote quotation) {
