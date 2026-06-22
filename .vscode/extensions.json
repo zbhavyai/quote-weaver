@@ -1,8 +1,9 @@
 {
   "recommendations": [
+    "editorconfig.editorconfig",
     "esbenp.prettier-vscode",
-    "foxundermoon.shell-format",
     "josevseb.google-java-format-for-vs-code",
+    "mkhl.shfmt",
     "pkief.material-icon-theme",
     "redhat.java",
     "redhat.vscode-microprofile",
@@ -10,9 +11,6 @@
     "redhat.vscode-xml",
     "redhat.vscode-yaml",
     "renesaarsoo.sql-formatter-vsc",
-    "sonarsource.sonarlint-vscode",
-    "visualstudioexptteam.intellicode-api-usage-examples",
-    "visualstudioexptteam.vscodeintellicode",
     "vscjava.vscode-java-debug",
     "vscjava.vscode-java-dependency",
     "vscjava.vscode-java-test",
