@@ -21,12 +21,16 @@ indent_size = 2
 [*.{yaml,yml}]
 indent_size = 2
 
+[*.{json,jsonc}]
+max_line_length = 120
+
 [*.md]
 indent_size = 3
 max_line_length = off
 
 [*.sh]
 indent_size = 4
+switch_case_indent = true
 max_line_length = off
 
 [Makefile]
